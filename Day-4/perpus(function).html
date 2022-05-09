@@ -1,0 +1,149 @@
+<script>
+    const daftarBuku =[
+        ["Buku A", 4, 3000],
+        ["Buku B", 9, 1500],
+        ["Buku C", 7, 6000],
+        ["Buku D", 8, 8000],
+        ["Buku E", 2, 9500],
+    ];
+
+    const cart = [];
+    
+    //-----------------------------FUNCTION SECTION-----------------------------//
+    // 1. menampilkan tiap-tiap buku yang tersedia
+    function listOfBooks (daftarBuku){
+        let daftarJudulBuku =""
+        daftarBuku.forEach((val) =>{
+            daftarJudulBuku += `JUDUL BUKU : ${val[0]}, STOCK : ${val[1]}, HARGA SEWA : ${val[2]}/Minggu\n`;
+        })
+        alert(`Berikut daftar buku yang tersedia :\n${daftarJudulBuku}`)
+    }
+
+    function listJudulBuku (daftarBuku){
+        let listJudulBuku = "";
+        daftarBuku.forEach((val) =>{
+            listJudulBuku += `\n${val[0]}`
+        });
+        return listJudulBuku;
+    }
+
+    // 2.menambahkan buku kedalam kekranjang
+    function addToCart (judulBuku){ 
+        if(cart.includes(judulBuku) == true){
+            alert(`Buku ${judulBuku} sudah ada di keranjang peminjaman anda`)
+        } else if (listJudulBuku.includes(judulBuku)){
+            cart.push(judulBuku);
+            alert(`Berikut daftar pinjaman anda ${cart.join(", ")}`)
+        } else {
+            alert(`${judulBuku} tidak ada di dalam list buku yang tersedia`)
+        }
+    }
+
+    // 3. menukar buku dengan buku laennya
+    // CARA PERTAMA
+    function booksChange(tukarBuku){ 
+        if(!cart.includes(tukarBuku) == true){
+            alert(`${tukarBuku} tidak ada dalam keranjang pinjaman anda`)
+        } else {
+            let tukarDengan = prompt(`${tukarBuku}, ingin ditukar dengan buku apa?`);
+            let cekIndexCart = cart.indexOf(tukarBuku);
+            if(!listJudulBuku.includes(tukarDengan)){
+                alert(`${tukarDengan}, tidak ada dalam list buku tersedia`)
+            } else if (cart.includes(tukarDengan) == true) {
+                alert("Anda tidak bisa menukar buku dengan judul yang sama")
+            } else if (!cart.includes(tukarDengan) == true && listJudulBuku.includes(tukarDengan) == true){
+                cart.splice(cekIndexCart,1,tukarDengan);
+                alert(`Berikut daftar pinjaman anda : ${cart.join(", ")}`)
+            }
+        }
+    }
+
+    
+    // CARA KEDUA
+    // function booksChange(tukarBuku, booksChangeCheck){
+    //     booksChangeCheck(tukarBuku)
+    // }
+
+    // function booksChangeCheck(tukarBuku, tukarDengan){
+    //     if(!cart.includes(tukarBuku) == true){
+    //         alert(`${tukarBuku} tidak ada dalam keranjang pinjaman anda`)
+    //     } else {
+    //         let tukarDengan = prompt(`${tukarBuku}, ingin ditukar dengan buku apa?`);
+    //         let cekIndexCart = cart.indexOf(tukarBuku);
+    //         if(!listJudulBuku.includes(tukarDengan)){
+    //             alert(`${tukarDengan}, tidak ada dalam list buku tersedia`)
+    //         } else if (cart.includes(tukarDengan) == true) {
+    //             alert("Anda tidak bisa menukar buku dengan judul yang sama")
+    //         } else if (!cart.includes(tukarDengan) == true && listJudulBuku.includes(tukarDengan) == true){
+    //             cart.splice(cekIndexCart,1,tukarDengan);
+    //             alert(`Berikut daftar pinjaman anda : ${cart.join(", ")}`)
+    //         }
+    //     }
+    // }
+
+
+    // 4. Menghapus daftar bukukar
+    function deletingList(hapusPinjaman, cekIndexCart){
+        if(cart.includes(hapusPinjaman) == true){
+                cart.splice(cekIndexCart,1);
+                if (cart.length < 1){
+                    alert("Keranjang pinjaman anda kosong")
+                } else {
+                    alert(`Berikut keranjang pinjaman anda : ${cart.join(", ")}`)
+                }
+            } else {
+                alert(`${hapusPinjaman}, tidak ada dalam keranjang pinjaman anda`)
+            }
+    }
+
+    // 5. checkout 
+    function checkout(qty, totalPembayaran, finalCart){
+        cart.forEach((val) =>{
+                qty = prompt(`Berapa minggu anda ingin meminjam buku ${val}`)
+                daftarBuku.forEach((val2) =>{
+                    if (val2.includes(val) == true){
+                        finalCart += `harga peminjaman ${val} selama ${qty} minggu adalah Rp.${qty*val2[2]}\n`;
+                        totalPembayaran += qty * val2[2];
+                    }
+                })
+            })
+
+            let konfirmasi = prompt(`Daftar pembayaran anda adalah :\n${finalCart}\nTotal pembayaran anda adalah Rp.${totalPembayaran}\n1.YES\n2.NO`);
+            if(konfirmasi ==1){
+                alert("Terimakasih sudah meminjam di perpustakaan kami ^^")
+                menu = 6;
+            } 
+    }
+    //------------xxxxxx------------FUNCTION SECTION------------xxxxxx-----------//
+
+
+    
+    let menu =1;
+    while(menu != 6){
+        menu = prompt(`Berikut layanan perpustakaan : \n 1. Daftar Buku\n 2. Meminjam Buku\n 3. Menukar Pinjaman Buku\n 4. Menghapus Pinjaman Buku\n 5. Checkout \n 6. Exit`)
+        if (menu == 1){
+            listOfBooks(daftarBuku);
+
+        } else if (menu == 2){
+            let pinjaman = prompt(`Berikut daftar buku yang tersedia : ${listJudulBuku(daftarBuku)}\n\nBuku manakah yang ingin anda masukan ke list peminjaman anda?`);
+            addToCart(pinjaman);
+
+        } else if (menu == 3){
+            let tukarBuku = prompt(`Berikut daftar keranjang pinjaman anda : ${cart.join(", ")}\n\nBuku mana yang ingin anda tukar?`);
+            // cara pertama
+            booksChange(tukarBuku)
+
+            // cara kedua
+            // booksChange(tukarBuku, booksChangeCheck)
+
+        } else if (menu == 4){
+            let hapusPinjaman = prompt(`Berikut daftar pinjaman anda : ${cart.join(", ")}\n\nBuku mana yang anda tidak jadi pinjam?`)
+            let cekIndexCart = cart.indexOf(hapusPinjaman);
+            deletingList(hapusPinjaman, cekIndexCart);
+
+        } else if (menu == 5){
+            checkout(0,0,"");
+        }
+    }
+
+</script>
