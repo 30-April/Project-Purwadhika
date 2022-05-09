@@ -1,0 +1,125 @@
+<script>
+
+    // ----------------------------- function section ----------------------------------//
+    function totalBiaya(nama, umur) {
+        if (umur < 5){
+            return  0;
+        } else if (umur >= 5 && umur <= 17){
+            return 20000
+        } else if (umur >= 17 && umur <= 40){
+            return 25000
+        } else if (umur > 40){
+            return  10000
+        }
+    }
+    // ----------------------------- function section ----------------------------------//
+
+    const cart = [];
+    let menu = 0;
+    let subMenu = 0;
+    let nomorRegistrasi = 0;
+    while(menu != 4){
+        menu = prompt("Selamat datang di menu pemesanan tiket online, berikut layanan yang kami sediakan :\n 1. Pemesanan Tiket\n 2. Checkout");
+        if (menu == 1){
+            while (subMenu != 4){
+                subMenu = prompt("Silahkan pilih paket pemesanan anda :\n 1. Perorangan\n 2. Pasangan\n 3. Kelompok\n 4. Exit");
+                if (subMenu == 1){
+                    let code = 1;
+                    let nama = prompt("Siapakah nama anda?");
+                    let umur = parseInt(prompt("Berapakah umur anda?"),10)
+                    cart.forEach((val) =>{
+                        totalBiaya(val[0],val[1])
+                    })
+                    nomorRegistrasi ++
+                    cart.push([].concat(nomorRegistrasi,nama,umur,code));
+
+                    let nextMove = prompt(`Daftar pemesanan anda adalah : \n ${nomorRegistrasi}. NAMA : ${nama}\n    USIA : ${umur} Tahun \n\n 1. Checkout \n 2. Batalkan Pemesanan`)
+                    if (nextMove == 1){
+                        menu == 2; // gua pengen ketika gua milih 1, maka bakal langsung ke menu 2.
+                    } else {
+                        cart = []
+                    }
+
+                } else if (subMenu == 2) {
+                    // let nama1 = prompt("Siapa nama anda?")
+                    // let umur1 = prompt("Berapa usia anda")
+                    // let nama2 = prompt("Siapa nama pasangan anda?")
+                    // let umur2 = prompt("Berapa usia pasangan anda")
+
+                    let nama = ""
+                    let umur = 0
+                    let total = 0;
+                    let code = 2;
+                    let display = "Daftar pemesanan anda adalah :\n"
+                    for (let i = 1; i <= 2; i++){
+                        // nama = prompt(`Siapa nama pengunju ${i}`) // gua pengen tanya, bisa ga nilai i = 1, ketika nilai i 1 gua mau prompt nya nanyain pasangan. dugaan gua pake if(coba nanti)
+                        // umur = prompt(`${nama}, berapa usia anda?`)
+
+                        if(i < 2){
+                            nama = prompt("Siapakah nama anda?");
+                            umur = prompt(`${nama}, berapakah usia anda?`)
+                            nomorRegistrasi++
+                        } else {
+                            nama = prompt(`Kak ${nama}, siapakah nama pasangan anda?`) // disini ${nama} masih berisikan nilai untuk i =1, kemudian setelah di enter baru mengganti nama var.
+                            umur = prompt(`${nama}, berapakah usia anda?`)
+                            nomorRegistrasi++
+                        }
+                        cart.push([].concat(nomorRegistrasi,nama,umur,code)); // gua gabungin arr[] dengan var nama sama umur, kemudian gua push kedalem cart[].
+                    }
+                    
+                    cart.forEach((val) => {
+                        total += totalBiaya(val[1],val[2])
+                        display += `${val[0]}. NAMA : ${val[1]}\n    USIA : ${val[2]} Tahun \n\n`
+                    })
+                    
+                    let nextMove = prompt(display + ` 1. Checkout \n 2. Batalkan Pemesanan`)
+                    if (nextMove == 1){
+                        menu == 2; // gua pengen ketika gua milih 1, maka bakal langsung ke menu 2.
+                    } else {
+                        cart = []
+                    }
+
+                } else if (subMenu == 3){
+                    let totalPengunjung = parseInt(prompt("Berapa total pengunjung yang ingin anda pesan?"),10);
+                    let nama ="";
+                    let umur =0;
+                    let total =0
+                    let code = 3;
+                    let display = "Daftar pemesanan anda adalah :\n"
+                    for(let i=1; i<= totalPengunjung; i++){
+                        nama = prompt(`Siapakah nama pengunjung ${i}?`)
+                        umur = prompt(`${nama}, berapa usia anda?`)
+                        nomorRegistrasi++
+                        cart.push([].concat(nomorRegistrasi,nama,umur,code)); // gua masukin data umur sama nama ke dalam arr yang kemudian di push kedalem cart.
+                    }
+
+                    cart.forEach((val) =>{
+                        total += totalBiaya(val[0],val[1]);
+                        display += `${nomorRegistrasi}. NAMA : ${val[0]}\n    USIA : ${val[1]} Tahun \n\n`
+                    })
+                    let nextMove = prompt(display + ` 1. Checkout \n 2. Batalkan Pemesanan`)
+                    if (nextMove == 1){
+                        menu == 2; // gua pengen ketika gua milih 1, maka bakal langsung ke menu 2.
+                    } else {
+                        cart = []
+                    }
+                }
+            }
+        } else if (menu == 2){
+            let display = ""
+            cart.forEach((val) =>{
+                display += `${val[0]}. NAMA : ${val[1]}\n    USIA : ${val[2]} Tahun \n\n`
+            })
+            let confirmation = prompt(`Berikut daftar pesanan anda : \n\n ${display}\nApakah anda akan memesan tiket dengan informasi yang tertera diatas?\n 1. Ya\n 2. Tidak`)
+            if (confirmation == 1){
+                cart.forEach((val) =>{
+                    if (val[3] == 1){
+                        alert(`Berikut total pembayaran anda :\n ${totalBiaya(val[1],val[2])}`)
+                    } else if (val[3] == 2){
+                        alert("Halo")
+                    }
+                })
+            }
+        }
+    }
+</script>

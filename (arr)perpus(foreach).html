@@ -1,0 +1,90 @@
+<script>
+    const daftarBuku =[
+        ["Buku A", 4, 5000],
+        ["Buku B", 10, 5000],
+        ["Buku C", 7, 5000],
+        ["Buku D", 8, 5000],
+        ["Buku E", 2, 5000],
+    ];
+
+    let listJudulBuku = "";
+    daftarBuku.forEach((val) =>{
+        listJudulBuku += `\n${val[0]}`
+    });
+
+    const cart =[];
+    let namaPengguna = prompt("Selamat datang, mohon tulis nama anda :")
+    let menu =1;
+    while (menu != 6){
+        menu = prompt(`Selamat datang ${namaPengguna}, berikut layanan perpustakaan : \n1.Daftar Buku\n2.Meminjam Buku\n3.Menukar Pinjaman Buku\n4.Menghapus Pinjaman Buku\n5.Checkout \n6.Exit`)
+        if(menu ==1){ //daftar buku
+            let infoBuku ="";
+            daftarBuku.forEach((val) =>{
+                infoBuku += `JUDUL : ${val[0]}, STOCK : ${val[1]}, HARGA SEWA : ${val[2]}/Minggu\n`;
+            });
+            alert(`Berikut daftar buku yang tersedia : \n${infoBuku}`)
+
+        } else if (menu ==2){ //penambahan buku
+            let pinjaman = prompt(`Berikut daftar buku yang tersedia : ${listJudulBuku}\n\nBuku manakah yang ingin anda masukan ke list peminjaman anda?`);
+            let cekPengulangan = listJudulBuku.includes(pinjaman);
+            if(cart.includes(pinjaman) == true){
+                alert("Buku sudah ditambahkan")
+                continue;
+            } else if (cekPengulangan == true){
+                cart.push(pinjaman);
+                alert(`Berikut daftar pinjaman anda : ${cart.join(', ')}`)
+            } else {
+                alert("Judul buku yang anda masukan tidak ada dalam daftar")
+            };
+
+        } else if (menu == 3){ //penggantian buku
+            let tukarBuku = prompt(`Berikut daftar keranjang pinjaman anda : ${cart.join(", ")}\n\nBuku mana yang ingin anda tukar?`)
+            if(!cart.includes(tukarBuku) == true){
+                alert("tidak ada bukut tersebut didalam daftar pinjaman anda")
+            } else {
+                let cekIndexCart = cart.indexOf(tukarBuku);
+                let tukarDengan = prompt(`${tukarBuku}, ingin ditukar dengan buku apa?`);
+                if(!listJudulBuku.includes(tukarDengan)){
+                    alert(`${tukarDengan}, tidak ada dalam list buku tersedia`)
+                } else if (cart.includes(tukarDengan) == true) {
+                    alert("Anda tidak bisa menukar buku dengan judul yang sama")
+                } else if (!cart.includes(tukarDengan) == true && listJudulBuku.includes(tukarDengan)){
+                    cart.splice(cekIndexCart,1,tukarDengan);
+                    alert(`Berikut daftar pinjaman anda : ${cart.join(", ")}`)
+                }
+            }
+        } else if (menu == 4){ //pembatalan pinjaman
+            let hapusPinjaman = prompt(`Berikut daftar pinjaman anda : ${cart.join(", ")}\n\nBuku mana yang anda tidak jadi pinjam?`)
+            let cekIndexCart = cart.indexOf(hapusPinjaman);
+            if(cart.includes(hapusPinjaman) == true){
+                cart.splice(cekIndexCart,1);
+                if (cart.length < 1){
+                    alert("Keranjang pinjaman anda kosong")
+                } else {
+                    alert(`Berikut keranjang pinjaman anda : ${cart.join(", ")}`)
+                }
+            } else {
+                alert(`${hapusPinjaman}, tidak ada dalam keranjang pinjaman anda`)
+            }
+        } else if (menu == 5){ //checkout
+            let qty = 0;
+            let totalPembayaran = 0;
+            let finalCart = "";
+            cart.forEach((val) =>{
+                qty = prompt(`Berapa minggu anda ingin meminjam buku ${val}`)
+                daftarBuku.forEach((val2) =>{
+                    if (val2.includes(val) == true){
+                        finalCart += `harga peminjaman ${val} selama ${qty} minggu adalah Rp.${qty*val2[2]}\n`;
+                        totalPembayaran += qty * val2[2];
+                    }
+                })
+            })
+
+            let konfirmasi = prompt(`Daftar pembayaran anda adalah :\n${finalCart}\nTotal pembayaran anda adalah Rp.${totalPembayaran}\n1.YES\n2.NO`);
+            if(konfirmasi ==1){
+                alert("Terimakasih sudah meminjam di perpustakaan kami ^^")
+                menu = 6;
+            } 
+        }
+    }
+</script>
