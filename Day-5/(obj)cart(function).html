@@ -1,0 +1,108 @@
+<script>
+    const daftarBuah = [
+        {name : "Apel", stok : 3, harga : 5000},
+        {name : "Anggur", stok : 10, harga : 7500},
+        {name : "Mangga", stok : 5, harga : 8000},
+        {name : "Jeruk", stok : 6, harga : 10000},
+        {name : "Naga", stok : 20, harga : 20000}
+    ];
+
+    const cart =[];
+    
+    // ----------- function section ---------- //
+    function listOfitem (arr){
+        let show = ""
+        let no = 1
+        arr.forEach((val) => {
+            show += `${no++}. Nama Buah : ${val.name}\n    Stok Buah : ${val.stok}\n    Harga per-Kg : ${val.harga}\n\n`;
+        });
+        alert(`Berikut daftar buah yang tersedia di toko : \n ${show}`)
+    }
+
+    // menu 2
+    function itemNames (arr){
+        let show = ""
+        arr.forEach((val) =>{
+            show += `${val.name}\n`
+        })
+        return show
+    }
+
+    // function addToCart(func, cart, item){
+    //     if(cart.includes(item) == true){
+    //         alert(`Buah sudah ada didalam keranjang`)
+    //     } else if (func(daftarBuah).includes(item) == true){
+    //         cart.push(item)
+    //         alert(`Berikut daftar keranjang anda : ${cart.join(", ")}`)
+    //     } else {
+    //         alert(`${item}, tidak ada dalam daftar buah yang tersedia`)
+    //     }
+    // }
+    
+
+    function addToCart(cart, item){
+        let show =[]
+        daftarBuah.forEach((val) =>{
+            if (item == val.name){
+                cart.push(val)
+                cart.forEach(val2 =>{
+                    show.push(val2.name)
+                })
+                alert(`Daftar belanja anda adalah : ${show.join(", ")}`)
+                console.log(cart)
+            } else {
+                alert(`Buah ${item} tidak ada dalam daftar penjualan`) // saat item tidak sama dengan val.name dia akan alert 5 X, sedangkan gua pengennya sekali aja kek includes gitu. sama gua juda bingung kalo misalnya gua pen ngasih tau kalo buah itu udah ada dalam keranjang elu, biar ga numpuk. praduga : pake do while?
+            }
+        })
+    }      
+
+    //menu 3
+    function deletFromCart(cart, item){
+        if (!cart.includes(item)){
+            alert(`${item}, tidak ada didalam keranjang belanja anda`)
+        } else {
+            cart.splice(cart.indexOf(item),1)
+            alert(`Berikut daftar belanja anda terbaru : ${cart.join(", ")}`)
+        }
+    }
+
+    //menu 4
+    function Checkout (cart){
+        let qty = 0;
+        let finalPayment = 0;
+        let show = ""
+
+        cart.forEach((val) =>{
+            qty = prompt(`Ingin membeli berapa buah ${val}`)
+            daftarBuah.forEach((val2) =>{
+                if(val2.name == val){
+                    show += `\nHarga buah ${val}, sebanyak ${qty} adalah : Rp.${qty*val2.harga}`
+                    finalPayment += qty * val2.harga
+                }
+            })
+        })
+
+        let konfirmasi = prompt(`Daftar pembyaranan anda adalah : ${show}\n\nTotal pembayaran anda adalah Rp.${finalPayment}\n1.Chechout\n2.No`)
+        if(konfirmasi == 1){
+            alert("Terimakasih sudah berbelanja")
+            menu =5;
+        }
+    }
+    // ---xxxx--- function section ---xxxx--- //
+
+    let menu = 1;
+    while (menu != 5){
+        menu = prompt(" 1. Daftar item\n 2. Memilih item\n 3. Menghapus item\n 4. Checkout")
+        if(menu == 1){
+            listOfitem(daftarBuah)
+        } else if (menu ==2){
+            let item = prompt(`Berikut daftar buah yang tersedia : \n${itemNames(daftarBuah)}\n\nBuah manakah yang anda ingin masukan ke keranjang belanja anda?`)
+            addToCart(cart, item)
+        } else if (menu == 3){
+            let deletedItem = prompt(`Beriku isi keranjang belanja anda : ${cart.join(", ")}\n\n Manakah yang anda ingin hapus?`)
+            deletFromCart(cart, deletedItem)
+        } else if (menu == 4){
+            Checkout(cart)
+        }
+    }
+</script>
