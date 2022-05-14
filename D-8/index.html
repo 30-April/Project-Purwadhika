@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Table Occupation</title>
+
+    <style>
+      table,
+      tr,
+      th,
+      td {
+        border: 1px solid black;
+        text-align: center;
+      }
+
+      td {
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <table>
+      <thead>
+        <tr>
+          <th>Nomor</th>
+          <th>Nama</th>
+          <th>Occupation</th>
+          <th>Gander</th>
+          <th>Age</th>
+          <th colspan="2">Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <!-- <tr>
+          <td>1</td>
+          <td>Anjas</td>
+          <td>Software Developer</td>
+          <td>Male</td>
+          <td>24</td>
+          <td><button onclick="deleteData()">Delete</button></td>
+        </tr> -->
+      </tbody>
+
+      <tfoot>
+        <tr>
+          <td></td>
+          <td><input type="text" name="" id="tbName" /></td>
+          <td>
+            <select id="tbOcc">
+              <option value="Software Developer">Software Developer</option>
+              <option value="Data Science">Data Science</option>
+              <option value="Chef">Chef</option>
+            </select>
+          </td>
+          <td>
+            <input name="gender" type="radio" id="tbGender1" value="Male" />
+            <label for="Male">Male</label>
+            <input name="gender" type="radio" id="tbGender2" value="Female" />
+            <label for="Female">Female</label>
+          </td>
+          <td><input type="number" name="" id="tbAge" /></td>
+          <td colspan="2"><button onclick="addData()">Add</button></td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <script>
+      class person {
+        constructor(name, occ, gender, age) {
+          this.name = name;
+          this.occ = occ;
+          this.gender = gender;
+          this.age = age;
+        }
+      }
+
+      const dataPerson = [
+        new person("Anjas", "Software Developer", "Male", 24),
+        new person("Pamel", "Data Science", "Female", 24),
+        new person("Badra", "Software Developer", "Male", 24),
+        new person("Fakhri", "Software Developer", "Male", 24),
+      ];
+
+      function deleteData(index) {
+        dataPerson.splice(index, 1);
+        renderData();
+      }
+
+      function addData() {
+        let name = document.getElementById("tbName").value;
+        let occ = document.getElementById("tbOcc").value;
+        let age = parseInt(document.getElementById("tbAge").value);
+        let gender = "";
+        if (document.getElementById("tbGender1").checked) {
+          gender = document.getElementById("tbGender1").value;
+        } else {
+          gender = document.getElementById("tbGender2").value;
+        }
+
+        let newPerson = new person(name, occ, gender, age);
+        dataPerson.push(newPerson);
+        renderData();
+      }
+
+      function saveEdit(indexEdit){
+        let name = document.getElementById("editName").value
+        let occ = document.getElementById("editOcc").value
+        let age = document.getElementById("editAge").value
+        let gender = "";
+        if (document.getElementById("editGender1").checked) {
+          gender = document.getElementById("editGender1").value;
+        } else {
+          gender = document.getElementById("editGender2").value;
+        }
+
+        dataPerson[indexEdit].name = name        
+        dataPerson[indexEdit].occ = occ        
+        dataPerson[indexEdit].age = age        
+        dataPerson[indexEdit].gender = gender  
+        
+        renderData()
+      }
+
+      function renderData(indexEdit) {
+        let strTemp = "";
+        dataPerson.forEach((val, index) => {
+          if(indexEdit == index ){
+            strTemp +=`
+            <tr>
+              <td></td>
+              <td><input type="text" name="" id="editName" value =${val.name} /></td>
+              <td>
+                <select id="editOcc">
+                  <option ${val.occ == "Software Developer"? "selected": ""} value="Software Developer">Software Developer</option>
+                  <option ${val.occ == "Data Science"? "selected": ""} value="Data Science">Data Science</option>
+                  <option ${val.occ == "Chef"? "selceted": ""} value="Chef">Chef</option>
+                </select>
+              </td>
+              <td>
+                <input ${val.gender == "Male"? "checked" : ""} name="editGender" type="radio" id="editGender1" value="Male">
+                <label for="Male">Male</label>
+                <input ${val.gender == "Female"? "checked" : ""} name="editGender" type="radio" id="editGender2" value="Female">
+                <label for="Female">Female</label>
+              </td>
+              <td><input type="number" name="" id="editAge" value = ${val.age}></td>
+              <td><button onclick="renderData()">Cancel</button></td>
+              <td><button onclick="saveEdit(${index})">Save</button></td>
+            </tr>
+            `
+          } else {
+            strTemp += `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${val.name}</td>
+                    <td>${val.occ}</td>
+                    <td>${val.gender}</td>
+                    <td>${val.age}</td>
+                    <td><button onclick="deleteData(${index})">Delete</button></td>
+                    <td><button onclick="renderData(${index})">Edit Data</button></td>
+                </tr>
+                `;
+          }
+        });
+        document.getElementsByTagName(`tbody`)[0].innerHTML = strTemp;
+      }
+      renderData();
+    </script>
+  </body>
+</html>

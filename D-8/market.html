@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Toko-Pak-Diyah</title>
+    <style>
+        table, td, th, tr {
+          border: 1px solid black;
+          text-align: center;  
+        }
+
+        td,th,tr {
+          padding: 10px;
+        }
+    </style>
+  </head>
+
+
+  <body>
+    <table id="tbMarket">
+      <thead>
+        <tr>
+          <th>Number</th>
+          <th>Product</th>
+          <th>Price</th>
+          <th>Category</th>
+          <th>Stock</th>
+          <th colspan="2">Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+      </tbody>
+
+      <tfoot>
+        <tr>
+          <td></td>
+          <td><input type="text" id="tbMarketName" placeholder="Nama product"></td>
+          <td><input type="number" id="tbMarketPrice" placeholder="Product price" ></td>
+          <td><input type="text" id="tbMarketCat" placeholder="Product category"></td>
+          <td><input type="number" id="tbMarketStock" placeholder="Product stock"></td>
+          <td colspan="2"><button onclick="addProduct()">Add</button></td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <br><br>
+    
+    <table id="tbCart">
+      <thead>
+        <tr>
+          <th>Number</th>
+          <th>Product</th>
+          <th>Price</th>
+          <th>Category</th>
+          <th>Quantity</th>
+          <th colspan="2">Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+      </tbody>
+    </table>
+    <h3>Total Pembelian Anda Adalah Rp.0</h6>
+
+    <script>
+      class product{
+        constructor(name, price, category, stock){
+          this.name = name
+          this.price = price
+          this.category = category
+          this.stock = stock
+        }
+      }
+
+      const arrProduct =[
+        new product ("Grape", 10000, "Fruits", 10),
+        new product ("Manggo", 7500, "Fruits", 8),
+        new product ("Banana", 6000, "Fruits", 7),
+        new product ("Durian", 15000, "Fruits", 11),
+      ]
+
+      class cart {
+        constructor(name, price, category, qty, productIndex){
+          this.name = name
+          this.price = price
+          this.category = category
+          this.qty = qty
+          this.productIndex = productIndex
+        }
+      }
+
+      const arrCart =[]
+
+      function renderDataMarket() {
+        let strTemp = ""
+        arrProduct.forEach((val, index) =>{
+          strTemp += `
+            <tr>
+              <td>${index+1}</td>
+              <td>${val.name}</td>
+              <td>Rp.${parseInt(val.price).toLocaleString()}</td>
+              <td>${val.category}</td>
+              <td>${val.stock}</td>
+              <td><button onclick="deleteProduct(${index})">Delete</button></td>
+              <td><button onclick="addToCart(${index})">Add to Cart</button></td>
+            </tr>
+          `
+        })
+        document.getElementsByTagName('tbody')[0].innerHTML = strTemp
+      }
+
+      function renderDataCart(indexEditCart){
+        let strTemp =""
+        arrCart.forEach((val, index) =>{
+          if (indexEditCart == index){
+            strTemp += `
+            <tr>
+            <td>${index +1}</td>
+              <td>${val.name}</td>
+              <td>Rp.${parseInt(val.price).toLocaleString()}</td>
+              <td>${val.category}</td>
+              <td><input type="number" id="editQty" placeholder="Quantity" value = "${val.qty}"></td>
+              <td><button onclick="renderDataCart()">Cencle</button></td>
+              <td><button onclick="saveEditCart(${index})">Save</button></td>
+            </tr>
+          `
+          } else {
+            strTemp += `
+            <tr>
+            <td>${index +1}</td>
+              <td>${val.name}</td>
+              <td>Rp.${parseInt(val.price).toLocaleString()}</td>
+              <td>${val.category}</td>
+              <td>${val.qty}</td>
+              <td><button onclick="deleteCart(${index})">Delete</button></td>
+              <td><button onclick="renderDataCart(${index})">Edit</button></td>
+            </tr>
+          `
+          }
+        })
+        document.getElementsByTagName('tbody')[1].innerHTML = strTemp
+      }
+
+      function addProduct(){
+        let name = document.getElementById('tbMarketName').value
+        let price = document.getElementById('tbMarketPrice').value
+        let category = document.getElementById('tbMarketCat').value
+        let stock = document.getElementById('tbMarketStock').value
+
+        let newProduct = new product(name,price,category,stock)
+        arrProduct.push(newProduct)
+        renderDataMarket()
+      }
+
+      function deleteProduct(index){
+        arrProduct.splice(index,1);
+        renderDataMarket();
+      }
+
+      function addToCart(index){
+        let qty = prompt(`Berapa banyak buah ${arrProduct[index].name} yang ingin anda beli?`)
+        let {name,price,category} = arrProduct[index]
+        let productIndex = index
+        let item = new cart(name,price,category,qty, productIndex)
+        let a = arrCart.map(function(i){return i.name})
+        if ((arrProduct[index].stock - qty) >= 0 ){
+          arrProduct[index].stock -= qty 
+          if(!a.includes(name)){
+            arrCart.push(item)
+          } else {
+            arrCart[a.indexOf(name)].qty  = parseInt(arrCart[a.indexOf(name)].qty) + parseInt(qty)
+          }
+        } else {
+          alert(`Maaf stock buah ${arrProduct[index].name} sudah habis`)
+        }
+        renderDataCart()
+        renderDataMarket()
+        payment()
+      }
+
+      function deleteCart(index){
+        arrProduct[arrCart[index].productIndex].stock += parseInt(arrCart[index].qty)
+        arrCart.splice(index,1);
+        renderDataCart();
+        renderDataMarket();
+        payment()
+      }
+
+      function saveEditCart(indexEditCart){
+        let currentQty = parseInt(arrCart[indexEditCart].qty)
+        let newQty = parseInt(document.getElementById('editQty').value)
+        if (newQty <= (currentQty + parseInt(arrProduct[arrCart[indexEditCart].productIndex].stock))){
+          if (currentQty > newQty){
+            arrCart[indexEditCart].qty = newQty
+            arrProduct[arrCart[indexEditCart].productIndex].stock = parseInt(arrProduct[arrCart[indexEditCart].productIndex].stock) + (parseInt(currentQty) - parseInt(newQty))
+          
+          } else {
+            arrCart[indexEditCart].qty = newQty
+            arrProduct[arrCart[indexEditCart].productIndex].stock = parseInt(arrProduct[arrCart[indexEditCart].productIndex].stock) - (parseInt(newQty) - parseInt(currentQty))
+          }
+        } else {
+          alert(`Maaf product ${arrCart[indexEditCart].name} sudah kehabisan stock`)
+        }
+
+        renderDataCart()
+        renderDataMarket()
+        payment()
+      }
+
+      function payment(){
+        if(arrCart.length < 1){
+          document.getElementsByTagName('h3')[0].innerHTML = `Total Pembelian Anda Adalah Rp.0`
+        } else {
+          let numTemp =0
+          arrCart.forEach((val) => {
+            numTemp += val.price * val.qty
+            document.getElementsByTagName('h3')[0].innerHTML = `Total Pembelian Anda Adalah Rp.${parseInt(numTemp).toLocaleString()}`
+          })
+        }
+      }
+
+      renderDataMarket()
+    </script>
+  </body>
+</html>
