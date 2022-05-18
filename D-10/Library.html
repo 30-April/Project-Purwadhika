@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perpus-Pak-Diyah v1.0</title>
+    <style>
+        table, td, th, tr {
+          border: 1px solid black;
+          text-align: center;  
+        }
+
+        td,th,tr {
+          padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <table> <!-- Tabel daftar buku Perpus-Pak-Diyah -->
+        <h4>Daftar Buku Perpus-Pak-Diyah, cari judul buku : <select id="searchCategory" onchange="renderProduct()">
+            <option value="All Product">All Product</option>
+            <option value="Horror">Horror</option>
+            <option value="Comic">Comic</option>
+            <option value="Programing">Programing</option>
+            <option value="Self-Improvement">Self-improvment</option>
+        </select> <input type="text" placeholder="Search the title" id="searchProduct" oninput="renderProduct()"><button onclick="reset()">Reset</button></h4>
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Category</th>
+                <th>Page</th>
+                <th>Rental Price/Week</th>
+                <th colspan="2">Action</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+        <tfoot>
+            <tr>
+                <td></td>
+                <td><input type="text" name="" id="productTitle" placeholder="Book's title"></td>
+                <td><input type="text" name="" id="productAuthor" placeholder="Book's authors"></td>
+                <td><select id="productCategory">
+                    <option value="Horror">Horror</option>
+                    <option value="Comic">Comic</option>
+                    <option value="Programing">Programing</option>
+                    <option value="Self-Improvement">Self-improvment</option>
+                </select></td>
+                <td><input type="number" placeholder="Book's page" id="productPage"></td>
+                <td><input type="number" placeholder="Rental price" id="productRent"></td>
+                <td colspan="2"><button onclick="addDataProduct()">Add</button></td>
+            </tr>
+        </tfoot>
+    </table>
+    <br><br>
+
+    <table> <!--Tabel Cart -->
+        <h4>Cart Table</h4>
+        <thead>
+            <tr>
+                <th colspan="7">Nama Peminjman :</th>
+            </tr>
+            <tr>
+                <th>No.</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Page</th>
+                <th>Price</th>
+                <th colspan="2">Action</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+        <tfoot>
+            <tr>
+                <th colspan="6">Total Payment</th>
+                <th id="payment"></th>
+            </tr>
+        </tfoot>
+    </table>
+    <script>
+        class product{
+            constructor(title, author, category, page, rent){
+                this.title = title;
+                this.author = author;
+                this.category = category;
+                this.page = page;
+                this.rent = rent;
+            }
+        }
+
+        const arrProduct =[
+            new product("Pocong Perawan", "Anjas The Hunter", "Horror", 365, 10000, 0),
+            new product("Azab Full-stack", "Anjas The Hunter", "Horror", 400, 20000, 1),
+            new product("Naruto", "Masashi Kishimoto", "Comic", 1000, 10000, 2),
+            new product("Ninja Warrior", "Kenta Anjas-kun", "Comic", 1000, 10000, 3),
+            new product("Javascript Handbook", "Anjas The Thunder", "Programing", 6969, 69000),
+            new product("NodeJs Handbook", "Anjas The Thunder", "Programing", 69, 69000),
+            new product("Jalanin Ae Dah", "Anjas The Predator", "Self-Improvement", 69, 75000),
+            new product("Pikirin Dulu Ed Dah", "Anjas The Predator", "Self-Improvement", 69, 150000),
+        ]
+
+
+        function renderProduct(){
+            let strTemp = ""
+            let arrTemp = arrProduct
+
+            if (document.getElementById("searchCategory").value == "Horror"){
+                arrTemp = arrProduct.filter(function(i){
+                    return i.category == "Horror"
+                })
+
+            } else if(document.getElementById("searchCategory").value == "Comic"){
+                arrTemp = arrProduct.filter(function(i){
+                    return i.category == "Comic"
+                })
+
+            } else if(document.getElementById("searchCategory").value == "Programing"){
+                arrTemp = arrProduct.filter(function(i){
+                    return i.category == "Programing"
+                })
+
+            } else if(document.getElementById("searchCategory").value == "Self-Improvement"){
+                arrTemp = arrProduct.filter(function(i){
+                    return i.category == "Self-Improvement"
+                })
+            }
+            
+            if(document.getElementById("searchProduct").value  != '')
+            {
+                arrTemp =  arrTemp.filter(function(i){return i.title == document.getElementById("searchProduct").value})
+            }
+
+            renderDataProduct(arrTemp) 
+        }
+
+        function renderDataProduct(arr){
+            let strTemp = ""
+            arr.forEach((val, index)=>{
+                strTemp +=`
+                <tr>
+                    <td>${index +1}</td>
+                    <td>${val.title}</td>
+                    <td>${val.author}</td>
+                    <td>${val.category}</td>
+                    <td>${val.page}</td>
+                    <td>Rp.${parseInt(val.rent).toLocaleString()}</td>
+                    <td><button onclick="deleteDataProduct(${index})">Delete</button></td>
+                    <td><button onclick="addToCart(${index})">Add to Cart</button></td>
+                </tr>
+                `
+            })
+            document.getElementsByTagName("tbody")[0].innerHTML = strTemp
+        }
+        
+        function addDataProduct(){
+            let title = document.getElementById("productTitle").value
+            let author = document.getElementById("productAuthor").value
+            let category = document.getElementById("productCategory").value
+            let page = document.getElementById("productPage").value
+            let rent = document.getElementById("productRent").value
+
+            let newProduct = new product(title, author, category, page, rent)
+            arrProduct.push(newProduct)
+            renderProduct()
+        }
+
+        function deleteDataProduct(index){
+        arrProduct.splice(index,1);
+        renderProduct();
+        }
+
+        function addToCart(index){
+            let rent = prompt("How long u gonna rent this book?")
+            let {title, author, page, price} = arrProduct[index]
+            let indexInArrProduct = index
+        }
+        
+        function reset(){
+            document.getElementById("searchProduct").value = ""
+            document.getElementById("searchCategory").value = "All Product"
+            renderProduct()
+        }
+        renderProduct()
+    </script>
+</body>
+</html>
