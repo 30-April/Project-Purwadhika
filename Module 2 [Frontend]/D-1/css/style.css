@@ -1,0 +1,38 @@
+.button-card{
+    width: 300px;
+    height: 100px;
+    background-color: darkslategray;
+    border-radius: 10px;
+    text-align: center;
+    padding-top :50px;
+    cursor: pointer;
+    border: 5px solid yellowgreen;
+}
+
+.button-card-title{
+    color: #eee;
+    font-size: 24px;
+}
+
+.button-card-subtitle{
+    color: #eee;
+    font-size: 20px;
+}
+
+.button-card:hover{
+    background-color: yellowgreen;
+    border: solid 5px darkslategray;
+    text-transform: uppercase;
+}
+
+.button-card:active{
+    background-color: slategrey;
+}
+
+.button-card-title:hover{
+    color: darkslategray;
+}
+
+.button-card-subtitle:hover{
+    color: darkslategray;
+}

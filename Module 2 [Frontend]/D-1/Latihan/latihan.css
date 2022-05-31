@@ -1,0 +1,64 @@
+.img1{
+    width: 300px;
+    /* margin-top: 100px; */
+}
+
+span{
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+
+.content-container{
+    display: inline-block;
+    width: 500px;   
+}
+
+.content-title{
+    font-size: 34px;
+}
+
+.content-subtitle{
+    font-size: 34px;
+}
+
+.container-price{
+    margin: 30px 0;
+    font-size: 18px;
+}
+
+.content-main{
+    width: 300px;
+}
+
+.content-size{
+    margin-top: 20px;
+}
+
+.size {
+    font-size: 24px;
+}
+
+.content-materials{
+    text-align: right;
+    font-size: 12px;
+}
+
+.btn-cart{
+    background-color: black;
+    color: white;
+    width: 100px;
+    height: 50px;
+}
+
+.btn-cart:hover{
+    background-color: white;
+    color: black;
+}
+
+/* product name   font-size: 36px;
+product price   font-size: 18px;
+product desc   font-size: 14px;
+product size    font-size: 12px;
+Medium font-size:24px
+product material 12px
+add to cart padding 16px
+ini button kalo dihover jd putih */
